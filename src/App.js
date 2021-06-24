@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import convertCurrency from './api';
+
+import Input from './components/Inputs';
+import Results from './components/Results';
+
+class App extends Component {
+  state = { 
+    fromCurrency: '',
+    toCurrency: '',
+    amount: 0,
+    convertedAmount: 0,
+    countries: [],
+  }
+
+  calculate = (fromCurrency, toCurrency, amount) => {
+    convertCurrency(fromCurrency, toCurrency, amount)
+      .then(({ convertedAmount, countries }) => {
+        this.setState({ fromCurrency, toCurrency, amount, convertedAmount, countries });
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <Input calculate={this.calculate} />
+        <Results data={this.state} />
+      </div>
+    )
+  }
 }
 
 export default App;
+
+
+
